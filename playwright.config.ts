@@ -48,6 +48,9 @@ export default defineConfig({
     // Tempo máximo para navegações como goto(), waitForURL(), waitForLoadState(), etc. 
     // Quando o valor é 0 também herda o limite do timeout geral do teste.
     navigationTimeout: 10_000, 
+
+    // Execução assistida (headed) para validação visual
+    headless: false,
   },
 
   /* Configure projects for major browsers */

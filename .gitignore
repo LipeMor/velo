@@ -29,6 +29,7 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+.playwright-mcp/
 
 # Graphify generated knowledge graph
 graphify-out/

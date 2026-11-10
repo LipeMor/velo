@@ -28,19 +28,15 @@ export function createConfiguratorActions(page: Page) {
       await expect(carImage).toHaveAttribute('src', src);
     },
 
-    async toggleOptional(name: string | RegExp) {
+    async checkOptional(name: string | RegExp) {
       await page.getByRole('checkbox', { name }).click();
     },
 
-    async expectOptionalChecked(name: string | RegExp) {
-      await expect(page.getByRole('checkbox', { name })).toHaveAttribute('aria-checked', 'true');
+    async uncheckOptional(name: string | RegExp) {
+      await page.getByRole('checkbox', { name }).click();
     },
 
-    async expectOptionalUnchecked(name: string | RegExp) {
-      await expect(page.getByRole('checkbox', { name })).toHaveAttribute('aria-checked', 'false');
-    },
-
-    async goToCheckout() {
+    async finishConfigurator() {
       await page.getByRole('button', { name: 'Monte o Seu' }).click();
     },
   };

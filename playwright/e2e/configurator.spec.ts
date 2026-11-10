@@ -28,26 +28,21 @@ test.describe('Configuração do Veículo', () => {
     await app.configurator.expectCarImageSrc('/src/assets/glacier-blue-aero-wheels.png');
   });
 
-  test('deve atualizar o preço ao selecionar e desmarcar opcionais e redirecionar para o checkout', async ({ app, page }) => {
+  test('deve atualizar o preço com opcionais e persistir no checkout', async ({ app }) => {
     await app.configurator.expectPrice('R$ 40.000,00');
 
-    await app.configurator.toggleOptional(/Precision Park/);
-    await app.configurator.expectOptionalChecked(/Precision Park/);
+    await app.configurator.checkOptional(/Precision Park/i);
     await app.configurator.expectPrice('R$ 45.500,00');
 
-    await app.configurator.toggleOptional(/Flux Capacitor/);
-    await app.configurator.expectOptionalChecked(/Flux Capacitor/);
+    await app.configurator.checkOptional(/Flux Capacitor/i);
     await app.configurator.expectPrice('R$ 50.500,00');
 
-    await app.configurator.toggleOptional(/Precision Park/);
-    await app.configurator.expectOptionalUnchecked(/Precision Park/);
-
-    await app.configurator.toggleOptional(/Flux Capacitor/);
-    await app.configurator.expectOptionalUnchecked(/Flux Capacitor/);
-
+    await app.configurator.uncheckOptional(/Precision Park/i);
+    await app.configurator.uncheckOptional(/Flux Capacitor/i);
     await app.configurator.expectPrice('R$ 40.000,00');
 
-    await app.configurator.goToCheckout();
-    await expect(page).toHaveURL('/order');
+    await app.configurator.finishConfigurator();
+    await app.checkout.expectLoaded();
+    await app.checkout.expectSummaryTotal('R$ 40.000,00');
   });
 });

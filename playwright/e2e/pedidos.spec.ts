@@ -1,24 +1,47 @@
 import { test, expect } from '../support/fixtures';
 import { generateOrderCode } from '../support/helpers';
 import type { OrderDetails } from '../support/actions/orderLookupActions';
+import { insertOrder, deleteOrderByNumber } from '../support/orderRepository';
 
 test.describe('Consulta de Pedido', () => {
+
   test.beforeEach(async ({ app }) => {
     await app.orderLookup.open();
+
+    // VLO-N2DUNX
   });
 
+
   test('deve consultar um pedido aprovado', async ({ app }) => {
+
     const order: OrderDetails = {
-      number: 'VLO-QNE15F',
+      number: 'VLO-SE4R01',
       status: 'APROVADO',
-      color: 'Midnight Black',
-      wheels: 'sport Wheels',
+      color: 'Glacier Blue',
+      wheels: 'aero Wheels',
       customer: {
-        name: 'FILIPE SANTOS',
-        email: 'filipeqa@gmail.com'
+        name: 'Fernando Papito',
+        email: 'papito@velo.dev',
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
     };
+
+    await deleteOrderByNumber(order.number);
+
+    await insertOrder({
+      id: crypto.randomUUID(),
+      order_number: order.number,
+      color: 'glacier-blue',
+      wheel_type: 'aero',
+      customer_name: order.customer.name,
+      customer_email: order.customer.email,
+      customer_phone: '(11) 99999-9999',
+      customer_cpf: '000.000.141-41',
+      payment_method: 'avista',
+      total_price: 40000,
+      status: order.status,
+      optionals: [],
+    });
 
     await app.orderLookup.searchOrder(order.number);
     await app.orderLookup.validateOrderDetails(order);
@@ -27,16 +50,33 @@ test.describe('Consulta de Pedido', () => {
 
   test('deve consultar um pedido reprovado', async ({ app }) => {
     const order: OrderDetails = {
-      number: 'VLO-8XRTQ1',
+      number: 'VLO-SE4R02',
       status: 'REPROVADO',
       color: 'Midnight Black',
       wheels: 'sport Wheels',
       customer: {
         name: 'Steve Jobs',
-        email: 'jobs@apple.com'
+        email: 'jobs@apple.com',
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
     };
+
+    await deleteOrderByNumber(order.number);
+
+    await insertOrder({
+      id: crypto.randomUUID(),
+      order_number: order.number,
+      color: 'midnight-black',
+      wheel_type: 'sport',
+      customer_name: order.customer.name,
+      customer_email: order.customer.email,
+      customer_phone: '(11) 99999-9999',
+      customer_cpf: '613.811.900-22',
+      payment_method: 'avista',
+      total_price: 52500,
+      status: order.status,
+      optionals: ['precision-park', 'flux-capacitor'],
+    });
 
     await app.orderLookup.searchOrder(order.number);
     await app.orderLookup.validateOrderDetails(order);
@@ -45,16 +85,33 @@ test.describe('Consulta de Pedido', () => {
 
   test('deve consultar um pedido em analise', async ({ app }) => {
     const order: OrderDetails = {
-      number: 'VLO-P13BFS',
+      number: 'VLO-SE4R03',
       status: 'EM_ANALISE',
       color: 'Glacier Blue',
       wheels: 'aero Wheels',
       customer: {
         name: 'João da Silva',
-        email: 'joao@velo.dev'
+        email: 'joao@velo.dev',
       },
-      payment: 'À Vista'
+      payment: 'À Vista',
     };
+
+    await deleteOrderByNumber(order.number);
+
+    await insertOrder({
+      id: crypto.randomUUID(),
+      order_number: order.number,
+      color: 'glacier-blue',
+      wheel_type: 'aero',
+      customer_name: order.customer.name,
+      customer_email: order.customer.email,
+      customer_phone: '(31) 99999-9999',
+      customer_cpf: '001.623.620-30',
+      payment_method: 'avista',
+      total_price: 40000,
+      status: order.status,
+      optionals: [],
+    });
 
     await app.orderLookup.searchOrder(order.number);
     await app.orderLookup.validateOrderDetails(order);
@@ -73,5 +130,13 @@ test.describe('Consulta de Pedido', () => {
 
     await app.orderLookup.searchOrder(order);
     await app.orderLookup.validateOrderNotFound();
+  });
+
+  test('deve manter o botão de busca desabilitado com campo vazio ou apenas espaços', async ({ app }) => {
+    const button = app.orderLookup.elements.searchButton;
+    await expect(button).toBeDisabled();
+
+    await app.orderLookup.elements.orderInput.fill('     ');
+    await expect(button).toBeDisabled();
   });
 });

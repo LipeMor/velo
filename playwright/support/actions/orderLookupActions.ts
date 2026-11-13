@@ -1,18 +1,32 @@
 import { Page, expect } from '@playwright/test';
 
-type OrderStatus = 'APROVADO' | 'REPROVADO' | 'EM_ANALISE';
+export type OrderStatus = 'APROVADO' | 'REPROVADO' | 'EM_ANALISE';
 
 export type OrderDetails = {
   number: string;
   status: OrderStatus;
   color: string;
   wheels: string;
-  customer: { name: string; email: string };
+  customer: {
+    name: string;
+    email: string;
+    document?: string;
+    phone?: string;
+  };
   payment: string;
+  total_price?: string;
 };
 
 export function createOrderLookupActions(page: Page) {
+  const orderInput = page.getByRole('textbox', { name: 'Número do Pedido' });
+  const searchButton = page.getByRole('button', { name: 'Buscar Pedido' });
+
   return {
+    elements: {
+      orderInput,
+      searchButton,
+    },
+
     async open() {
       await page.goto('/');
       const title = page.getByTestId('hero-section').getByRole('heading');
@@ -23,8 +37,8 @@ export function createOrderLookupActions(page: Page) {
     },
 
     async searchOrder(code: string) {
-      await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(code);
-      await page.getByRole('button', { name: 'Buscar Pedido' }).click();
+      await orderInput.fill(code);
+      await searchButton.click();
     },
 
     async validateOrderDetails(order: OrderDetails) {

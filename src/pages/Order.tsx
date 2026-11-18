@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import InputMask from 'react-input-mask';
+import _InputMask from 'react-input-mask';
+const InputMask = _InputMask as unknown as React.ComponentType<any>;
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
@@ -62,8 +63,8 @@ const orderSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   surname: z.string().min(2, 'Sobrenome deve ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido'),
-  phone: z.string().min(14, 'Telefone inválido'),
-  cpf: z.string().min(14, 'CPF inválido'),
+  phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
+  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'CPF inválido'),
   store: z.string().min(1, 'Selecione uma loja'),
   terms: z.boolean().refine((val) => val === true, 'Aceite os termos'),
 });
@@ -95,7 +96,7 @@ const Order = () => {
   });
 
   const totalPrice = calculateTotalPrice(configuration);
-  
+
   // Cálculo dinâmico das parcelas baseado no valor da entrada
   // Parcela = (Total - Entrada) / 12 * 1.02
   const amountToFinance = Math.max(0, totalPrice - entryValue);
@@ -183,8 +184,8 @@ const Order = () => {
       }
     }
 
-    const finalPrice = paymentMethod === 'financiamento' 
-      ? (entryValue + totalFinanced) 
+    const finalPrice = paymentMethod === 'financiamento'
+      ? (entryValue + totalFinanced)
       : totalPrice;
 
     const optionalsSanitized = (
@@ -257,7 +258,7 @@ const Order = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Form */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} noValidate className="space-y-8">
               {/* Personal Info */}
               <section className="bg-card rounded-lg p-6 shadow-elegant">
                 <h2 className="font-display text-lg font-semibold mb-6">Dados Pessoais</h2>

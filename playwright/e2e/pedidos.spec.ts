@@ -1,47 +1,20 @@
 import { test, expect } from '../support/fixtures';
 import { generateOrderCode } from '../support/helpers';
 import type { OrderDetails } from '../support/actions/orderLookupActions';
-import { insertOrder, deleteOrderByNumber } from '../support/orderRepository';
+import { insertOrder, deleteOrderByNumber } from '../support/database/orderRepository';
+import testData from '../support/fixtures/orders.json' with { type: 'json' };
 
 test.describe('Consulta de Pedido', () => {
 
   test.beforeEach(async ({ app }) => {
     await app.orderLookup.open();
-
-    // VLO-N2DUNX
   });
 
-
   test('deve consultar um pedido aprovado', async ({ app }) => {
-
-    const order: OrderDetails = {
-      number: 'VLO-SE4R01',
-      status: 'APROVADO',
-      color: 'Glacier Blue',
-      wheels: 'aero Wheels',
-      customer: {
-        name: 'Fernando Papito',
-        email: 'papito@velo.dev',
-      },
-      payment: 'À Vista',
-    };
+    const order: OrderDetails = testData.aprovado as OrderDetails;
 
     await deleteOrderByNumber(order.number);
-
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: order.number,
-      color: 'glacier-blue',
-      wheel_type: 'aero',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '(11) 99999-9999',
-      customer_cpf: '000.000.141-41',
-      payment_method: 'avista',
-      total_price: 40000,
-      status: order.status,
-      optionals: [],
-    });
+    await insertOrder(order);
 
     await app.orderLookup.searchOrder(order.number);
     await app.orderLookup.validateOrderDetails(order);
@@ -49,34 +22,10 @@ test.describe('Consulta de Pedido', () => {
   });
 
   test('deve consultar um pedido reprovado', async ({ app }) => {
-    const order: OrderDetails = {
-      number: 'VLO-SE4R02',
-      status: 'REPROVADO',
-      color: 'Midnight Black',
-      wheels: 'sport Wheels',
-      customer: {
-        name: 'Steve Jobs',
-        email: 'jobs@apple.com',
-      },
-      payment: 'À Vista',
-    };
+    const order: OrderDetails = testData.reprovado as OrderDetails;
 
     await deleteOrderByNumber(order.number);
-
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: order.number,
-      color: 'midnight-black',
-      wheel_type: 'sport',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '(11) 99999-9999',
-      customer_cpf: '613.811.900-22',
-      payment_method: 'avista',
-      total_price: 52500,
-      status: order.status,
-      optionals: ['precision-park', 'flux-capacitor'],
-    });
+    await insertOrder(order);
 
     await app.orderLookup.searchOrder(order.number);
     await app.orderLookup.validateOrderDetails(order);
@@ -84,34 +33,10 @@ test.describe('Consulta de Pedido', () => {
   });
 
   test('deve consultar um pedido em analise', async ({ app }) => {
-    const order: OrderDetails = {
-      number: 'VLO-SE4R03',
-      status: 'EM_ANALISE',
-      color: 'Glacier Blue',
-      wheels: 'aero Wheels',
-      customer: {
-        name: 'João da Silva',
-        email: 'joao@velo.dev',
-      },
-      payment: 'À Vista',
-    };
+    const order: OrderDetails = testData.em_analise as OrderDetails;
 
     await deleteOrderByNumber(order.number);
-
-    await insertOrder({
-      id: crypto.randomUUID(),
-      order_number: order.number,
-      color: 'glacier-blue',
-      wheel_type: 'aero',
-      customer_name: order.customer.name,
-      customer_email: order.customer.email,
-      customer_phone: '(31) 99999-9999',
-      customer_cpf: '001.623.620-30',
-      payment_method: 'avista',
-      total_price: 40000,
-      status: order.status,
-      optionals: [],
-    });
+    await insertOrder(order);
 
     await app.orderLookup.searchOrder(order.number);
     await app.orderLookup.validateOrderDetails(order);

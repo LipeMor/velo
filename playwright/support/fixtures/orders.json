@@ -1,0 +1,45 @@
+{
+  "aprovado": {
+    "number": "VLO-SE4R01",
+    "status": "APROVADO",
+    "color": "Glacier Blue",
+    "wheels": "aero Wheels",
+    "customer": {
+      "name": "Fernando Papito",
+      "email": "papito@velo.dev",
+      "document": "000.000.141-41",
+      "phone": "(11) 99999-9999"
+    },
+    "payment": "À Vista",
+    "total_price": "40000"
+  },
+  "reprovado": {
+    "number": "VLO-SE4R02",
+    "status": "REPROVADO",
+    "color": "Midnight Black",
+    "wheels": "sport Wheels",
+    "customer": {
+      "name": "Steve Jobs",
+      "email": "jobs@apple.com",
+      "document": "613.811.900-22",
+      "phone": "(11) 99999-9999"
+    },
+    "payment": "À Vista",
+    "total_price": "52500"
+  },
+  "em_analise": {
+    "number": "VLO-SE4R03",
+    "status": "EM_ANALISE",
+    "color": "Glacier Blue",
+    "wheels": "aero Wheels",
+    "customer": {
+      "name": "João da Silva",
+      "email": "joao@velo.dev",
+      "document": "001.623.620-30",
+      "phone": "(31) 99999-9999"
+    },
+    "payment": "À Vista",
+    "total_price": "40000"
+  }
+}
+
